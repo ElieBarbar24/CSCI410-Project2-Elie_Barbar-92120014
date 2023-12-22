@@ -5,6 +5,7 @@ class User{
   final String password;
   final String status;
   String? photo;
+  int? relationID;
 
   User(this.name, this.email, this.password, this.status);
   Map<String, dynamic> toJson() {
@@ -15,7 +16,7 @@ class User{
       'Status': status,
     };
   }
-  User.idUser(this.id,this.name, this.email, this.password, this.status,this.photo);
+  User.idUser(this.id,this.name, this.email, this.password, this.status,this.photo,this.relationID);
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User.idUser(
@@ -25,6 +26,7 @@ class User{
       json['password'] as String,
       json['Status'] as String,
       json['photo'] as String?,
+      json['relationID'] as int?
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:connect/Models/User.dart';
 import 'package:connect/Querys/UserAction.dart';
+import 'package:connect/pages/ChatPage.dart';
 import 'package:flutter/material.dart';
 
 class FriendsModels extends StatelessWidget {
@@ -49,11 +50,11 @@ class FriendsModels extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Container(
-                child: InkWell(
-              onTap: () async {
+                child: IconButton(
+              onPressed: () async {
                 await Unfriend(user.id!);
               },
-              child: Container(
+              icon: Container(
                   height: 45,
                   width: 45,
                   alignment: Alignment.center,
@@ -65,7 +66,32 @@ class FriendsModels extends StatelessWidget {
                     Icons.person_remove,
                     color: Colors.white,
                   )),
-            )),
+            )
+            ),
+
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Container(
+                child: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: user)));
+              },
+              icon: Container(
+                  height: 45,
+                  width: 45,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF113953),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: const Icon(
+                    Icons.message,
+                    color: Colors.white,
+                  )),
+            )
+            ),
+
           ),
         ]),
       ),

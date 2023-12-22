@@ -1,21 +1,16 @@
+import 'package:connect/Models/Messages.dart';
+import 'package:connect/Models/User.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 
 class ChatSample extends StatelessWidget {
-  final String message;
-  final bool isSender;
-  final String isSeen;
-  final String date;
-  const ChatSample(
-      {super.key,
-      required this.message,
-      required this.isSender,
-      required this.isSeen,
-      required this.date});
+  final Messages message;
+  const ChatSample({super.key, required this.message});
+
   @override
   Widget build(BuildContext context) {
-    if (isSender) {
-      return Container(
+
+      return message.Sid == currentUser.id! ? Container(
         alignment: Alignment.centerRight,
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 80),
@@ -31,30 +26,24 @@ class ChatSample extends StatelessWidget {
                 // crossAxisAlignment: CrossAxisAlignment.start
                 children: [
                   Text(
-                    message,
+                    message.content,
                     style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
-                    date,
+                    message.date.toString(),
                     style: const TextStyle(fontSize: 13, color: Colors.white70),
                   ),
-                  Icon(
-                    isSeen == 'unreaded' ? Icons.done : Icons.done_all,
-                    color: Colors.white70,
-                    size: 15,
-                  )
                 ],
               ),
             ),
           ),
         ),
-      );
-    }
+      ):
 
-    return Container(
+      Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(right: 80),
       child: Padding(
@@ -76,14 +65,14 @@ class ChatSample extends StatelessWidget {
 
               children: [
                 Text(
-                  message,
+                  message.content,
                   style: const TextStyle(fontSize: 16),
                 ),
                 SizedBox(
                   width: 10,
                 ),
                 Text(
-                  date,
+                  message.date.toString(),
                   style: const TextStyle(fontSize: 13, color: Color(0xFF113953)),
                 ),
               ],

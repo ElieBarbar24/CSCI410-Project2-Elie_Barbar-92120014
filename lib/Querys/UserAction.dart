@@ -112,7 +112,7 @@ Future<int?> logIn(String email, String password) async {
     Map<String, dynamic> data = json.decode(response.body);
 
     User user = User.idUser(int.parse(data['ID']), data['name'], data['email'],
-        data['password'], data['Status'], data['ProfilePic']);
+        data['password'], data['Status'], data['ProfilePic'],data['friendID']);
     currentUser = user;
     return 200;
   } else if (response.statusCode == 401) {
@@ -160,6 +160,8 @@ class FriendRequests {
           u['password'],
           u['Status'],
           u['ProfilePic'],
+          int.parse(u['friendID'])
+
         ));
       }
       _usersController.add(users);
@@ -204,6 +206,8 @@ class searchPeopleStream {
           u['password'],
           u['Status'],
           u['ProfilePic'],
+          int.parse(u['friendID'])
+
         ));
       }
       _usersController.add(users);
@@ -265,6 +269,8 @@ class filterPeopleStream {
           u['password'],
           u['Status'],
           u['ProfilePic'],
+          int.parse(u['friendID'])
+
         ));
       }
       _usersController.add(users);
@@ -314,6 +320,7 @@ class SFriends {
         _usersController.add(users);
         return;
       }
+      print(response.body);
       final List<dynamic> jsonResponse = jsonDecode(response.body);
 
       List<User> users = [];
@@ -325,6 +332,7 @@ class SFriends {
           u['password'],
           u['Status'],
           u['ProfilePic'],
+          int.parse(u['friendID'])
         ));
       }
       _usersController.add(users);
@@ -397,9 +405,102 @@ Future<void> sendMessage(Messages message) async{
       headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(message.toJson()),
+        body: jsonEncode(message.toSend()),
     );
+    print(response.body);
   }catch(error){
-
+    print(error);
   }
 }
+
+Future<List<Messages>?> loadMessages(int id) async {
+  const String apiUrl = 'https://eliebarbar.000webhostapp.com/LoadMessages.php';
+
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({'relationId': id}),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      List<Messages> messages = jsonList.map((json) => Messages.fromJson(json)).toList();
+      return messages;
+    } else {
+      // Handle errors here
+      print('Error: ${response.statusCode}');
+
+    }
+
+}
+
+class SignalService {
+  final _signalController = StreamController<int?>();
+  Stream<int?> get signalStream => _signalController.stream;
+
+  Future<void> roomSignalCheck(int id) async {
+    const String apiUrl = 'https://eliebarbar.000webhostapp.com/chatRoomSignalRequest.php';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'id': id}),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        final int? signal = responseBody['signal'];
+        _signalController.add(signal);
+      } else {
+        // Emit an error to the stream when the request fails
+        _signalController.addError(response.statusCode);
+      }
+    } catch (error) {
+      // Handle network errors
+      _signalController.addError(error);
+    }
+  }
+
+  void dispose() {
+    _signalController.close();
+  }
+}
+
+Future<void> roomSignalChangeTo1(int id) async {
+    const String apiUrl = 'https://eliebarbar.000webhostapp.com/chatRoomSignalChange1.php';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'id': id}),
+      );
+        print(response.body);
+
+    } catch (error) {
+    }
+  }
+
+  Future<void> roomSignalChangeTo0(int id) async {
+    const String apiUrl = 'https://eliebarbar.000webhostapp.com/chatRoomSignalChange0.php';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'id': id}),
+      );
+        print(response.body);
+
+    } catch (error) {
+    }
+  }
