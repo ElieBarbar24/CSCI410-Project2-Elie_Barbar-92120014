@@ -153,15 +153,13 @@ class FriendRequests {
       final List<dynamic> jsonResponse = jsonDecode(response.body);
       List<User> users = [];
       for (var u in jsonResponse) {
-        users.add(User.idUser(
+        users.add(User.friendRequest(
           int.parse(u['ID']),
           u['name'],
           u['email'],
           u['password'],
           u['Status'],
-          u['ProfilePic'],
-          int.parse(u['friendID'])
-
+          u['ProfilePic']
         ));
       }
       _usersController.add(users);
@@ -199,14 +197,13 @@ class searchPeopleStream {
 
       List<User> users = [];
       for (var u in jsonResponse) {
-        users.add(User.idUser(
+        users.add(User.friendRequest(
           int.parse(u['ID']),
           u['name'],
           u['email'],
           u['password'],
           u['Status'],
           u['ProfilePic'],
-          int.parse(u['friendID'])
 
         ));
       }
@@ -436,6 +433,43 @@ Future<List<Messages>?> loadMessages(int id) async {
     }
 
 }
+
+class MessageStream {
+  final _messagesController = StreamController<List<Messages>>();
+  Stream<List<Messages>> get messagesStream => _messagesController.stream;
+
+  Future<void> loadMessages(int id) async {
+    const String apiUrl = 'https://eliebarbar.000webhostapp.com/LoadMessages.php';
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({'relationId': id}),
+    );
+
+    if (response.statusCode == 200) {
+      if (response.body.isEmpty) {
+        List<Messages> messages = [];
+        _messagesController.add(messages);
+        return;
+      }
+
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      List<Messages> messages = jsonList.map((json) => Messages.fromJson(json)).toList();
+      _messagesController.add(messages);
+    } else {
+      // Handle errors here
+      print('Error: ${response.statusCode}');
+    }
+  }
+
+  void dispose() {
+    _messagesController.close();
+  }
+}
+
 
 class SignalService {
   final _signalController = StreamController<int?>();
