@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:connect/Models/RecentChatModel.dart';
 import 'package:connect/Models/User.dart';
+import 'package:connect/Querys/UserAction.dart';
 import 'package:connect/widgets/ActiveChats.dart';
 import 'package:flutter/material.dart';
 
@@ -14,18 +18,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Timer timer;
+  RecentChatSignal recentChatSignal = RecentChatSignal();
+  RecentChatsStream recentChatsStream = RecentChatsStream();
+
+  @override
+  void initState() {
+    recentChatsStream.loadRecentChats(currentUser.id!);
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      recentChatSignal.RecentChatSignalCheck(currentUser.id!);
+    });
+    recentChatSignal.signalStream.listen((int? result) async {
+      if (result == 1) {
+        print(result);
+        recentChatSignal.RecentChatSignalCheck(currentUser.id!);
+      } else {}
+    }, onError: (error) {});
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double appBarHeight = AppBar().preferredSize.height;
-
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double bodyheigh = screenHeight - appBarHeight;
-
-    print('AppBar Height: $kToolbarHeight');
-
     return Scaffold(
       drawer: NavigationDrawer(
-        email: currentUser.email,
+        email: currentUser.email!,
         name: currentUser.name,
       ),
       appBar: AppBar(
@@ -36,72 +53,41 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: ListView(
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 3),
-                )
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7291666666666666,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        hintText: "Search",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const Icon(
-                  Icons.search,
-                  color: Color(0xFF113953),
-                )
-              ],
-            ),
-          ),
-          DefaultTabController(
-            length: 2,
-            child: Column(
-              children: [
-                const TabBar(
-                  tabs: [
-                    Tab(icon: Icon(Icons.person), text: 'Private Chats'),
-                    Tab(icon: Icon(Icons.group), text: 'Group Chats'),
-                  ],
-                ),
-                Container(
-                  height: (MediaQuery.of(context).size.height),
-                  child: TabBarView(
-                    children: [
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: const Offset(0, 2),
+          )
+        ]),
+        child: StreamBuilder(
+          stream: recentChatsStream.recentChatsStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<RecentChatsModel> recentChats = snapshot.data!;
 
-                      RecentChats(),
-                      Center(child: Text('HIIIIIIIIIIIIIIII')),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+              recentChats.sort((a, b) => b.date.compareTo(a.date));
+
+              return ListView.builder(
+                itemCount: recentChats.length,
+                  itemBuilder: (context, index) {
+                return RecentChatWidget(
+                  recentChat: recentChats[index],
+                );
+              });
+            } else {
+              return Center();
+            }
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          await LoadRecentChats(currentUser.id!);
+        },
         backgroundColor: const Color(0xFF113953),
         child: const Icon(
           Icons.message,

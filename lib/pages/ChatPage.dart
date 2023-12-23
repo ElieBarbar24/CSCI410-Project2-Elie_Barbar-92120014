@@ -23,8 +23,6 @@ class _ChatPageState extends State<ChatPage> {
   SignalService signalService = SignalService();
   late Timer timer;
   MessageStream messageStream = MessageStream();
-
-  List<Messages> messages = [];
   @override
   void initState() {
     messageStream.loadMessages(widget.user.relationID!);

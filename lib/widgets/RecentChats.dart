@@ -1,49 +1,28 @@
-import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:async';
 
+import 'package:connect/Models/RecentChatModel.dart';
 import 'package:connect/Models/User.dart';
+import 'package:connect/Querys/UserAction.dart';
 import 'package:connect/pages/ChatPage.dart';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-class RecentChats extends StatelessWidget {
-  RecentChats({super.key});
-  @override
-  Widget build(BuildContext context) {
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              blurRadius: 10,
-              spreadRadius: 2,
-              offset: const Offset(0, 2),
-            )
-          ]),
-      child: ListView(
-        children: List.generate(
-          12,
-          (index) => RecentChatWidget(user: currentUser),
-        ),
-      ),
-    );
-  }
-}
 
 class RecentChatWidget extends StatelessWidget {
-  final User user;
-  const RecentChatWidget({required this.user});
+  final RecentChatsModel recentChat;
+  const RecentChatWidget({required this.recentChat});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          if(recentChat.senderId==currentUser.id!){
+            Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: User.user(recentChat.receiverName, recentChat.receiverId, recentChat.relationId,recentChat.receiverProfile))));
+          }else{
+            Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: User.user(recentChat.senderName, recentChat.senderId, recentChat.relationId,recentChat.senderProfile))));
+          }
+        },
         child: SizedBox(
           height: 65,
           child: Row(children: [
@@ -51,7 +30,7 @@ class RecentChatWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(35),
               child: Image.network(
-                'https://eliebarbar.000webhostapp.com/profileImages/${user.photo}',
+                'https://eliebarbar.000webhostapp.com/profileImages/${recentChat.senderId == currentUser.id!?recentChat.receiverProfile:recentChat.senderProfile}',
                 height: 65,
                 width: 65,
               ),
@@ -62,7 +41,7 @@ class RecentChatWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user.name,
+                    recentChat.senderId == currentUser.id!?recentChat.receiverName:recentChat.senderName,
                     style: const TextStyle(
                       fontSize: 18,
                       color: Color(0xFF113953),
@@ -74,7 +53,7 @@ class RecentChatWidget extends StatelessWidget {
                   ),
                   // last message between the users
                   Text(
-                    '',
+                    recentChat.content,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black54,

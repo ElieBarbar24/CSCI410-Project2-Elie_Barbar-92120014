@@ -22,16 +22,16 @@ class Messages{
     };
   }
 
-  Map<String, dynamic> toSend() {
-    return {
-      'content': content,
-      'type': type,
-      'Sid': Sid,
-      'Rid': Rid,
-      'date': date.toString(),
-      'relationID':relationID
-    };
-  }
+    Map<String, dynamic> toSend() {
+      return {
+        'content': content,
+        'type': type,
+        'Sid': Sid,
+        'Rid': Rid,
+        'date':date.toString(),
+        'relationID':relationID
+      };
+    }
 
   factory Messages.fromJson(Map<String, dynamic> json) {
     return Messages.idMessage(

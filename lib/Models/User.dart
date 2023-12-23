@@ -1,9 +1,9 @@
 class User{
   int? id;
   final String name;
-  final String email;
-  final String password;
-  final String status;
+  String? email;
+  String? password;
+  String? status;
   String? photo;
   int? relationID;
 
@@ -18,6 +18,7 @@ class User{
   }
   User.idUser(this.id,this.name, this.email, this.password, this.status,this.photo,this.relationID);
   User.friendRequest(this.id,this.name, this.email, this.password, this.status,this.photo);
+  User.user(this.name, this.id,this.relationID,this.photo);
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User.idUser(

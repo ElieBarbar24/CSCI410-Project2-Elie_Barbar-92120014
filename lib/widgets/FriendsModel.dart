@@ -37,7 +37,7 @@ class FriendsModels extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  user.status,
+                  user.status!,
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.black54,

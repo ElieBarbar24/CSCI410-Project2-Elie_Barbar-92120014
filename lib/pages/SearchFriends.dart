@@ -28,7 +28,7 @@ class _SearchFriendsState extends State<SearchFriends> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavigationDrawer(
-        email: currentUser.email,
+        email: currentUser.email!,
         name: currentUser.name,
       ),
       appBar: AppBar(

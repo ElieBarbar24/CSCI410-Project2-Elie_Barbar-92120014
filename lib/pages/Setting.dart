@@ -43,7 +43,7 @@ class _SettingState extends State<Setting> {
 
     return Scaffold(
       drawer: NavigationDrawer(
-        email: currentUser.email,
+        email: currentUser.email!,
         name: currentUser.name,
       ),
       appBar: AppBar(
@@ -99,10 +99,10 @@ class _SettingState extends State<Setting> {
               NameitemProfile(
                   'Name', currentUser.name, Icons.person, nameController),
               const SizedBox(height: 10),
-              EmailitemProfile('Email', currentUser.email, Icons.mail, emailController),
+              EmailitemProfile('Email', currentUser.email!, Icons.mail, emailController),
               const SizedBox(height: 10),
               PassworditemProfile(
-                  'Password', currentUser.password, Icons.password, passwordController),
+                  'Password', currentUser.password!, Icons.password, passwordController),
               const SizedBox(
                 height: 20,
               ),
