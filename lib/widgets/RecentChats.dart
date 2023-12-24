@@ -6,10 +6,46 @@ import 'package:connect/Querys/UserAction.dart';
 import 'package:connect/pages/ChatPage.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class RecentChatWidget extends StatelessWidget {
+class RecentChatWidget extends StatefulWidget {
   final RecentChatsModel recentChat;
   const RecentChatWidget({required this.recentChat});
+
+  @override
+  State<RecentChatWidget> createState() => _RecentChatWidgetState();
+}
+
+class _RecentChatWidgetState extends State<RecentChatWidget> {
+  String? date;
+
+
+  @override
+  void initState() {
+    DateTime dateTime = DateTime.parse(widget.recentChat.date);
+
+  // Get the current DateTime
+  DateTime now = DateTime.now();
+
+  // Calculate the difference between now and the parsed DateTime
+  Duration difference = now.difference(dateTime);
+
+  // Format the result based on conditions
+  String formattedDate = '';
+
+  if (difference.inHours < 24) {
+    // If it's within the last 24 hours, show the hour and minute
+    formattedDate = DateFormat.Hm().format(dateTime);
+  } else if (difference.inDays == 1) {
+    // If it's yesterday, show 'Yesterday'
+    formattedDate = 'Yesterday';
+  } else {
+    // Otherwise, show the year, month, and day
+    formattedDate = DateFormat.yMMMMd().format(dateTime);
+  }
+  date = formattedDate;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +53,10 @@ class RecentChatWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: InkWell(
         onTap: () {
-          if(recentChat.senderId==currentUser.id!){
-            Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: User.user(recentChat.receiverName, recentChat.receiverId, recentChat.relationId,recentChat.receiverProfile))));
+          if(widget.recentChat.senderId==currentUser.id!){
+            Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: User.user(widget.recentChat.receiverName, widget.recentChat.receiverId, widget.recentChat.relationId,widget.recentChat.receiverProfile))));
           }else{
-            Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: User.user(recentChat.senderName, recentChat.senderId, recentChat.relationId,recentChat.senderProfile))));
+            Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: User.user(widget.recentChat.senderName, widget.recentChat.senderId, widget.recentChat.relationId,widget.recentChat.senderProfile))));
           }
         },
         child: SizedBox(
@@ -30,7 +66,7 @@ class RecentChatWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(35),
               child: Image.network(
-                'https://eliebarbar.000webhostapp.com/profileImages/${recentChat.senderId == currentUser.id!?recentChat.receiverProfile:recentChat.senderProfile}',
+                'https://eliebarbar.000webhostapp.com/profileImages/${widget.recentChat.senderId == currentUser.id!?widget.recentChat.receiverProfile:widget.recentChat.senderProfile}',
                 height: 65,
                 width: 65,
               ),
@@ -41,7 +77,7 @@ class RecentChatWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    recentChat.senderId == currentUser.id!?recentChat.receiverName:recentChat.senderName,
+                    widget.recentChat.senderId == currentUser.id!?widget.recentChat.receiverName:widget.recentChat.senderName,
                     style: const TextStyle(
                       fontSize: 18,
                       color: Color(0xFF113953),
@@ -53,7 +89,7 @@ class RecentChatWidget extends StatelessWidget {
                   ),
                   // last message between the users
                   Text(
-                    recentChat.content,
+                    widget.recentChat.content,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black54,
@@ -63,7 +99,7 @@ class RecentChatWidget extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            /*Padding(
+            Padding(
               padding: const EdgeInsets.only(right: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,11 +108,11 @@ class RecentChatWidget extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    cdate,
+                    date!,
                     style:
                         const TextStyle(fontSize: 15, color: Color(0xFF113953)),
                   ),
-                  nbunreaded!='0'? Container(
+                  widget.recentChat.unreadedCount!=0? Container(
                     height: 30,
                     width: 30,
                     alignment: Alignment.center,
@@ -85,7 +121,7 @@ class RecentChatWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Text(
-                      nbunreaded,
+                      '${widget.recentChat.unreadedCount}',
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -94,7 +130,7 @@ class RecentChatWidget extends StatelessWidget {
                   ):Container()
                 ],
               ),
-            ),*/
+            ),
           ]),
         ),
       ),

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:connect/Models/RecentChatModel.dart';
 import 'package:connect/Models/User.dart';
 import 'package:connect/Querys/UserAction.dart';
-import 'package:connect/widgets/ActiveChats.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/RecentChats.dart';
@@ -25,15 +24,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     recentChatsStream.loadRecentChats(currentUser.id!);
+    recentChatSignal.RecentChatSignalCheck(currentUser.id!);
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       recentChatSignal.RecentChatSignalCheck(currentUser.id!);
     });
     recentChatSignal.signalStream.listen((int? result) async {
       if (result == 1) {
         print(result);
-        recentChatSignal.RecentChatSignalCheck(currentUser.id!);
+        recentChatsStream.loadRecentChats(currentUser.id!);
+
+        RecentChatSignalChange0(currentUser.id!);
       } else {}
-    }, onError: (error) {});
+    }, onError: (error) {print(error);});
 
     super.initState();
   }

@@ -387,16 +387,14 @@ Future<int?> updateEmail(String email) async {
 Future<void> sendMessage(Messages message) async {
   const String apiUrl = 'https://eliebarbar.000webhostapp.com/sendMessage.php';
 
-
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(message.toSend()),
-    );
-    print(response.body);
-
+  final response = await http.post(
+    Uri.parse(apiUrl),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(message.toSend()),
+  );
+  print(response.body);
 }
 
 Future<List<Messages>?> loadMessages(int id) async {
@@ -561,7 +559,7 @@ class RecentChatsStream {
         },
         body: jsonEncode({'id': id}),
       );
-
+      print(response.body);
       if (response.statusCode == 200) {
         if (response.body.isEmpty) {
           _recentChatsController.add([]);
@@ -608,17 +606,39 @@ class RecentChatSignal {
         final int? signal = responseBody['signal'];
         _signalController.add(signal);
       } else {
-        // Emit an error to the stream when the request fails
         _signalController.addError(response.statusCode);
       }
     } catch (error) {
-      // Handle network errors
       _signalController.addError(error);
     }
   }
 
   void dispose() {
     _signalController.close();
+  }
+}
+
+Future<int?> RecentChatSignalCheck(int id) async {
+  const String apiUrl =
+      'https://eliebarbar.000webhostapp.com/RecentChatSignalCheck.php';
+
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({'id': id}),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      final int? signal = responseBody['signal'];
+      return signal;
+    } else {
+
+    }
+  } catch (error) {
+
   }
 }
 
@@ -648,6 +668,23 @@ Future<void> RecentChatSignalChange1(int id) async {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({'id': id}),
+    );
+  } catch (error) {
+    print(error);
+  }
+}
+
+Future<void> MakeUnreadedMessagesReaded(int id, int relationId) async {
+  const String apiUrl =
+      'https://eliebarbar.000webhostapp.com/MessageTypeChange.php';
+
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({'id': id, 'relationId': relationId}),
     );
   } catch (error) {}
 }

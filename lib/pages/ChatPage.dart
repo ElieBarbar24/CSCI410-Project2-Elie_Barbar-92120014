@@ -13,7 +13,6 @@ class ChatPage extends StatefulWidget {
   const ChatPage({super.key, required this.user});
 
   @override
-  // ignore: no_logic_in_create_state
   State<ChatPage> createState() => _ChatPageState();
 }
 
@@ -26,13 +25,19 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     messageStream.loadMessages(widget.user.relationID!);
+
+    MakeUnreadedMessagesReaded(currentUser.id!, widget.user.relationID!);
+
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       signalService.roomSignalCheck(widget.user.relationID!);
     });
 
     signalService.signalStream.listen((int? result) async {
       if (result == 1) {
+        MakeUnreadedMessagesReaded(currentUser.id!, widget.user.relationID!);
+
         messageStream.loadMessages(widget.user.relationID!);
+
         roomSignalChangeTo0(widget.user.relationID!);
       } else {}
     }, onError: (error) {});
@@ -150,9 +155,13 @@ class _ChatPageState extends State<ChatPage> {
         ),
         trailing: IconButton(
           onPressed: () async {
+            if(chatTextController.text.isEmpty){
+              return;
+            }
+
             Messages message = Messages(
                 chatTextController.text,
-                'message',
+                'unreaded',
                 currentUser.id!,
                 widget.user.id!,
                 DateTime.now(),
@@ -161,6 +170,9 @@ class _ChatPageState extends State<ChatPage> {
             print(message.toSend());
             await sendMessage(message);
             roomSignalChangeTo1(widget.user.relationID!);
+            RecentChatSignalChange1(currentUser.id!);
+            RecentChatSignalChange1(widget.user.id!);
+
           },
           icon: Icon(
             Icons.send,

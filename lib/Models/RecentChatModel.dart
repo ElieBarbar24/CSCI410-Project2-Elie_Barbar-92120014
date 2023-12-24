@@ -12,6 +12,7 @@ class RecentChatsModel {
   final int receiverId;
   final String receiverName;
   final String receiverProfile;
+  final int unreadedCount;
 
   RecentChatsModel({
     required this.id,
@@ -27,6 +28,7 @@ class RecentChatsModel {
     required this.receiverId,
     required this.receiverName,
     required this.receiverProfile,
+    required this.unreadedCount,
   });
 
   factory RecentChatsModel.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class RecentChatsModel {
       receiverId: int.parse(json['ReciverID']),
       receiverName: json['ReciverName'],
       receiverProfile: json['ReceiverProfile'],
+      unreadedCount: int.parse(json['UnreadCount'])
     );
   }
 }

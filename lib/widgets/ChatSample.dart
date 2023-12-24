@@ -1,16 +1,52 @@
 import 'package:connect/Models/Messages.dart';
 import 'package:connect/Models/User.dart';
+import 'package:connect/Querys/UserAction.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class ChatSample extends StatelessWidget {
+class ChatSample extends StatefulWidget {
   final Messages message;
   const ChatSample({super.key, required this.message});
 
   @override
-  Widget build(BuildContext context) {
+  State<ChatSample> createState() => _ChatSampleState();
+}
 
-      return message.Sid == currentUser.id! ? Container(
+class _ChatSampleState extends State<ChatSample> {
+  String? date;
+
+  @override
+  void initState() {
+    DateTime dateTime = widget.message.date;
+
+  // Get the current DateTime
+  DateTime now = DateTime.now();
+
+  // Calculate the difference between now and the parsed DateTime
+  Duration difference = now.difference(dateTime);
+
+  // Format the result based on conditions
+  String formattedDate = '';
+
+  if (difference.inHours < 24) {
+    // If it's within the last 24 hours, show the hour and minute
+    formattedDate = DateFormat.Hm().format(dateTime);
+  } else if (difference.inDays == 1) {
+    // If it's yesterday, show 'Yesterday'
+    formattedDate = 'Yesterday';
+  } else {
+    // Otherwise, show the year, month, and day
+    formattedDate = DateFormat.yMMMMd().format(dateTime);
+  }
+
+
+  date = formattedDate;
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+      return widget.message.Sid == currentUser.id! ? Container(
         alignment: Alignment.centerRight,
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 80),
@@ -26,16 +62,17 @@ class ChatSample extends StatelessWidget {
                 // crossAxisAlignment: CrossAxisAlignment.start
                 children: [
                   Text(
-                    message.content,
+                    widget.message.content,
                     style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
-                    message.date.toString(),
+                   date!,
                     style: const TextStyle(fontSize: 13, color: Colors.white70),
                   ),
+                  widget.message.type.compareTo('unreaded')==0?Icon(Icons.done,color: Colors.white,):Icon(Icons.done_all,color: Colors.white,)
                 ],
               ),
             ),
@@ -65,14 +102,14 @@ class ChatSample extends StatelessWidget {
 
               children: [
                 Text(
-                  message.content,
+                  widget.message.content,
                   style: const TextStyle(fontSize: 16),
                 ),
                 SizedBox(
                   width: 10,
                 ),
                 Text(
-                  message.date.toString(),
+                  date!,
                   style: const TextStyle(fontSize: 13, color: Color(0xFF113953)),
                 ),
               ],
