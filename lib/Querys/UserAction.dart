@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:connect/Models/Messages.dart';
 import 'package:connect/Models/RecentChatModel.dart';
 import 'package:connect/Models/User.dart';
@@ -383,6 +384,27 @@ Future<int?> updateEmail(String email) async {
     return response.statusCode;
   } catch (error) {}
 }
+
+Future<void> updateProfile(int id, File image) async {
+  const String apiUrl = 'https://eliebarbar.000webhostapp.com/updateImage.php';
+
+  try {
+    var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
+    request.fields['json'] = jsonEncode({'id': id});
+    request.files.add(await http.MultipartFile.fromPath('image', image.path));
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('Image uploaded successfully');
+    } else {
+      print('Failed to upload image. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error uploading image: $error');
+  }
+}
+
 
 Future<void> sendMessage(Messages message) async {
   const String apiUrl = 'https://eliebarbar.000webhostapp.com/sendMessage.php';

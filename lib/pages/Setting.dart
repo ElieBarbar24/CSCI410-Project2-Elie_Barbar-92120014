@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connect/Models/User.dart';
 import 'package:connect/Querys/UserAction.dart';
 import 'package:connect/widgets/customAlertDialog.dart';
@@ -29,6 +31,10 @@ class _SettingState extends State<Setting> {
   Future<void> _selectImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if(image !=null){
+      await updateProfile(currentUser.id!, File(image.path));
+    }
   }
 
   @override
