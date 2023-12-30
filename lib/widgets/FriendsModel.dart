@@ -50,11 +50,34 @@ class FriendsModels extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Container(
-                child: IconButton(
-              onPressed: () async {
-                await Unfriend(user.id!);
-              },
-              icon: Container(
+              child: IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Confirm Unfriend"),
+                        content: Text(
+                            "Are you sure you want to unfriend this user?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false); // User canceled
+                            },
+                            child: Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async{
+                              await Unfriend(user.id!); // User confirmed
+                            },
+                            child: Text("Unfriend"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                icon: Container(
                   height: 45,
                   width: 45,
                   alignment: Alignment.center,
@@ -65,17 +88,18 @@ class FriendsModels extends StatelessWidget {
                   child: const Icon(
                     Icons.person_remove,
                     color: Colors.white,
-                  )),
-            )
+                  ),
+                ),
+              ),
             ),
-
           ),
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Container(
                 child: IconButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>ChatPage(user: user)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (builder) => ChatPage(user: user)));
               },
               icon: Container(
                   height: 45,
@@ -89,9 +113,7 @@ class FriendsModels extends StatelessWidget {
                     Icons.message,
                     color: Colors.white,
                   )),
-            )
-            ),
-
+            )),
           ),
         ]),
       ),

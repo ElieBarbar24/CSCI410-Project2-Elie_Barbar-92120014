@@ -9,13 +9,12 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 //Create New User Or Signup Methode
-Future<void> createUser(User user) async {
+Future<int> createUser(User user) async {
   ByteData fileContents = await rootBundle.load('images/pic.png');
   Uint8List imageData = fileContents.buffer.asUint8List();
   const String apiUrl = 'https://eliebarbar.000webhostapp.com/createUser.php';
 
   var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-
   request.fields['json'] = jsonEncode(user.toJson());
   request.files.add(
     http.MultipartFile.fromBytes('file', imageData,
@@ -26,16 +25,24 @@ Future<void> createUser(User user) async {
     final client = http.Client();
     final response = await client.send(request);
 
-    if (response.statusCode == 201) {
+    // Ensure client is closed
+    client.close();
+
+    print(response);
+
+    // Handle different response scenarios
+    if (response.statusCode == 200) {
       print('User created successfully');
+    } else if (response.statusCode == 401) {
+      print('Email Already Exist');
     } else {
       print('Failed to create user. Status code: ${response.statusCode}');
-      print('Response: ${await response.stream.bytesToString()}');
     }
 
-    client.close();
+    return response.statusCode;
   } catch (error) {
     print('Error sending request: $error');
+    return 0;
   }
 }
 
@@ -109,7 +116,7 @@ Future<int?> logIn(String email, String password) async {
     },
     body: jsonEncode({'email': email, 'password': password}),
   );
-  print(response.body);
+
   if (response.statusCode == 200) {
     Map<String, dynamic> data = json.decode(response.body);
 
@@ -405,7 +412,6 @@ Future<void> updateProfile(int id, File image) async {
   }
 }
 
-
 Future<void> sendMessage(Messages message) async {
   const String apiUrl = 'https://eliebarbar.000webhostapp.com/sendMessage.php';
 
@@ -656,12 +662,8 @@ Future<int?> RecentChatSignalCheck(int id) async {
       final Map<String, dynamic> responseBody = json.decode(response.body);
       final int? signal = responseBody['signal'];
       return signal;
-    } else {
-
-    }
-  } catch (error) {
-
-  }
+    } else {}
+  } catch (error) {}
 }
 
 Future<void> RecentChatSignalChange0(int id) async {
