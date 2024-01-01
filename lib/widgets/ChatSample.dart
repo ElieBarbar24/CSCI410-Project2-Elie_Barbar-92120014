@@ -1,6 +1,5 @@
 import 'package:connect/Models/Messages.dart';
 import 'package:connect/Models/User.dart';
-import 'package:connect/Querys/UserAction.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -65,14 +64,14 @@ class _ChatSampleState extends State<ChatSample> {
                     widget.message.content,
                     style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
                    date!,
                     style: const TextStyle(fontSize: 13, color: Colors.white70),
                   ),
-                  widget.message.type.compareTo('unreaded')==0?Icon(Icons.done,color: Colors.white,):Icon(Icons.done_all,color: Colors.white,)
+                  widget.message.type.compareTo('unreaded')==0?const Icon(Icons.done,color: Colors.white,):const Icon(Icons.done_all,color: Colors.white,)
                 ],
               ),
             ),
@@ -105,7 +104,7 @@ class _ChatSampleState extends State<ChatSample> {
                   widget.message.content,
                   style: const TextStyle(fontSize: 16),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Text(

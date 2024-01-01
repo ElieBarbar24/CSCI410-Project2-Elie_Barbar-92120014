@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 class RecentChatWidget extends StatefulWidget {
   final RecentChatsModel recentChat;
-  const RecentChatWidget({required this.recentChat});
+  const RecentChatWidget({super.key, required this.recentChat});
 
   @override
   State<RecentChatWidget> createState() => _RecentChatWidgetState();
@@ -37,7 +37,7 @@ class _RecentChatWidgetState extends State<RecentChatWidget> {
       formattedDate = 'Yesterday';
     } else {
       // Otherwise, show the year, month, and day
-      formattedDate = DateFormat.yMMMMd().format(dateTime);
+      formattedDate = DateFormat.yMd().format(dateTime);
     }
     date = formattedDate;
     super.initState();
@@ -68,6 +68,7 @@ class _RecentChatWidgetState extends State<RecentChatWidget> {
           }
         },
         child: SizedBox(
+
           height: 65,
           child: Row(children: [
             //recent chat image profile

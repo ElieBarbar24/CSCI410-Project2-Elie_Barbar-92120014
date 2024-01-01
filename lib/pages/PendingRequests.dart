@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:connect/Models/User.dart';
 import 'package:connect/Querys/UserAction.dart';
 import 'package:connect/widgets/FriendsRequest.dart';
@@ -38,12 +37,12 @@ class _PendingRequests extends State<PendingRequests> {
       appBar: AppBar(
         actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: IconButton(onPressed: (){
               setState(() {
                 peopleRequests.loadFriendRequests();
               });
-            }, icon: Icon(Icons.refresh))
+            }, icon: const Icon(Icons.refresh))
           ),
         ],
       ),
@@ -131,7 +130,7 @@ class _PendingRequests extends State<PendingRequests> {
                     );
                   }
 
-                  return Center();
+                  return const Center();
                 }),
           ),
         ],

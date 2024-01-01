@@ -199,6 +199,7 @@ class searchPeopleStream {
       final List<dynamic> jsonResponse = jsonDecode(response.body);
 
       List<User> users = [];
+      print(response.body);
       for (var u in jsonResponse) {
         users.add(User.friendRequest(
           int.parse(u['ID']),
@@ -242,15 +243,16 @@ class filterPeopleStream {
 
   Future<void> filterPeople(String s) async {
     const String apiUrl =
-        'https://eliebarbar.000webhostapp.com/searchPeople.php';
+        'https://eliebarbar.000webhostapp.com/searchPeopleByName.php';
 
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({'id': currentUser.id, 'subName': s}),
+      body: jsonEncode({'id': currentUser.id, 'name': s}),
     );
+    print(response.body);
     if (response.statusCode == 200) {
       if (response.body.isEmpty) {
         List<User> users = [];
@@ -261,15 +263,15 @@ class filterPeopleStream {
 
       List<User> users = [];
       for (var u in jsonResponse) {
-        users.add(User.idUser(
-            int.parse(u['ID']),
-            u['name'],
-            u['email'],
-            u['password'],
-            u['Status'],
-            u['ProfilePic'],
-            int.parse(u['friendID'])));
+        users.add(User.people(
+          int.parse(u['ID']),
+          u['name'],
+          u['email'],
+          u['Status'],
+          u['ProfilePic'],
+        ));
       }
+      print(users[0]);
       _usersController.add(users);
     }
   }
@@ -356,6 +358,7 @@ Future<int?> updateName(String name) async {
       return 500;
     }
   } catch (error) {}
+  return null;
 }
 
 Future<void> updatePassword(String password) async {
@@ -390,6 +393,7 @@ Future<int?> updateEmail(String email) async {
     print(response.body);
     return response.statusCode;
   } catch (error) {}
+  return null;
 }
 
 Future<void> updateProfile(int id, File image) async {
@@ -445,6 +449,7 @@ Future<List<Messages>?> loadMessages(int id) async {
     // Handle errors here
     print('Error: ${response.statusCode}');
   }
+  return null;
 }
 
 class MessageStream {
@@ -664,6 +669,7 @@ Future<int?> RecentChatSignalCheck(int id) async {
       return signal;
     } else {}
   } catch (error) {}
+  return null;
 }
 
 Future<void> RecentChatSignalChange0(int id) async {

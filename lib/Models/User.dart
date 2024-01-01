@@ -19,7 +19,7 @@ class User{
   User.idUser(this.id,this.name, this.email, this.password, this.status,this.photo,this.relationID);
   User.friendRequest(this.id,this.name, this.email, this.password, this.status,this.photo);
   User.user(this.name, this.id,this.relationID,this.photo);
-
+  User.people(this.id,this.name,this.email,this.status,this.photo);
   factory User.fromJson(Map<String, dynamic> json) {
     return User.idUser(
       json['id'] as int?,

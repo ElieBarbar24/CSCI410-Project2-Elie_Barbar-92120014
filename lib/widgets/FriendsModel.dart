@@ -56,21 +56,23 @@ class FriendsModels extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Confirm Unfriend"),
-                        content: Text(
-                            "Are you sure you want to unfriend this user?"),
+                        title: const Text("Confirm Unfriend"),
+                        content: const Text(
+                            "!Are you sure you want to unfriend this user?"),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(false); // User canceled
                             },
-                            child: Text("Cancel"),
+                            child: const Text("Cancel"),
                           ),
                           TextButton(
                             onPressed: () async{
                               await Unfriend(user.id!); // User confirmed
+                              Navigator.of(context).pop(false); // User canceled
+
                             },
-                            child: Text("Unfriend"),
+                            child: const Text("Unfriend"),
                           ),
                         ],
                       );

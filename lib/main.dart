@@ -35,7 +35,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       routes: {
         "/": (context) => const LaunchingPage(),
         "homepage": (context) => const HomePage(),
-        "setting":(context) =>  Setting(),
+        "setting":(context) =>  const Setting(),
         "searchFriends": (context) => const SearchFriends(),
         "RegisterPage": (context) => const RegisterPage(),
         "LoginPage": (context) => const LoginPage(),

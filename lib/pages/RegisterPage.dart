@@ -1,6 +1,5 @@
 import 'package:connect/Models/User.dart';
 import 'package:connect/Querys/UserAction.dart';
-import 'package:connect/pages/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -242,23 +241,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                 builder: (BuildContext context) {
                                   if (response == 201) {
                                     return AlertDialog(
-                                      title: Text('Register Success'),
+                                      title: const Text('Register Success'),
                                       content:
-                                          Text('Login And Enjoy Your Time'),
+                                          const Text('Login And Enjoy Your Time'),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context)
                                                 .pop(); // Close the dialog
                                           },
-                                          child: Text('OK'),
+                                          child: const Text('OK'),
                                         ),
                                       ],
                                     );
                                   } else if (response == 400) {
                                     return AlertDialog(
-                                      title: Text('Registration Failed'),
-                                      content: Text(
+                                      title: const Text('Registration Failed'),
+                                      content: const Text(
                                           'File field is missing in the request.'),
                                       actions: [
                                         TextButton(
@@ -266,43 +265,43 @@ class _RegisterPageState extends State<RegisterPage> {
                                             Navigator.of(context)
                                                 .pop(); // Close the dialog
                                           },
-                                          child: Text('OK'),
+                                          child: const Text('OK'),
                                         ),
                                       ],
                                     );
                                   } else if (response == 409) {
                                     return AlertDialog(
-                                      title: Text('Registration Failed'),
+                                      title: const Text('Registration Failed'),
                                       content:
-                                          Text('Duplicate entry for email.'),
+                                          const Text('Duplicate entry for email.'),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context)
                                                 .pop(); // Close the dialog
                                           },
-                                          child: Text('OK'),
+                                          child: const Text('OK'),
                                         ),
                                       ],
                                     );
                                   } else if (response == 500) {
                                     return AlertDialog(
-                                      title: Text('Registration Failed'),
-                                      content: Text('Internal server error.'),
+                                      title: const Text('Registration Failed'),
+                                      content: const Text('Internal server error.'),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context)
                                                 .pop(); // Close the dialog
                                           },
-                                          child: Text('OK'),
+                                          child: const Text('OK'),
                                         ),
                                       ],
                                     );
                                   } else {
                                     // Generic case for any other status code
                                     return AlertDialog(
-                                      title: Text('Registration Failed'),
+                                      title: const Text('Registration Failed'),
                                       content:
                                           Text('Unexpected Error: $response'),
                                       actions: [
@@ -311,7 +310,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             Navigator.of(context)
                                                 .pop(); // Close the dialog
                                           },
-                                          child: Text('OK'),
+                                          child: const Text('OK'),
                                         ),
                                       ],
                                     );

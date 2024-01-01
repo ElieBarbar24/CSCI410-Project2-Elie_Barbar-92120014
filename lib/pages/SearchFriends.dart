@@ -16,6 +16,7 @@ class _SearchFriendsState extends State<SearchFriends> {
   @override
   void initState() {
     peopleStream.searchUsers();
+    filterStream.pauseStream();
     super.initState();
   }
 
@@ -35,14 +36,14 @@ class _SearchFriendsState extends State<SearchFriends> {
       appBar: AppBar(
         actions: [
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: IconButton(
                   onPressed: () {
                     setState(() {
                       peopleStream.searchUsers();
                     });
                   },
-                  icon: Icon(Icons.refresh))),
+                  icon: const Icon(Icons.refresh))),
         ],
       ),
       body: ListView(
@@ -88,13 +89,21 @@ class _SearchFriendsState extends State<SearchFriends> {
                         ),
                         onChanged: (String s) {
                           if(s.compareTo('')==0){
-                            filterStream.pauseStream();
+                            setState(() {
+                              filterStream.pauseStream();
                             peopleStream.resumeStream();
+                            peopleStream.searchUsers();
+                            });
+                            print(filterStream.isStreamPaused());
                           }
                           else{
-                            filterStream.resumeStream();
+                            setState(() {
+                              filterStream.resumeStream();
                             peopleStream.pauseStream();
                             filterStream.filterPeople(s);
+                            });
+                            print(filterStream.isStreamPaused());
+
                           }
                         },
                       ),
@@ -125,7 +134,7 @@ class _SearchFriendsState extends State<SearchFriends> {
                     offset: const Offset(0, 2),
                   )
                 ]),
-            child: !peopleStream.isStreamPaused()
+            child: filterStream.isStreamPaused()
                 ? StreamBuilder<List<User>>(
                     stream: peopleStream.usersStream,
                     builder: (BuildContext context,
@@ -141,7 +150,7 @@ class _SearchFriendsState extends State<SearchFriends> {
                         );
                       }
                       return const Center(
-                        child: Text('No Friends! Try to Make Some.'),
+                        child: CircularProgressIndicator(),
                       );
                     })
                 : StreamBuilder<List<User>>(
@@ -159,7 +168,7 @@ class _SearchFriendsState extends State<SearchFriends> {
                         );
                       }
                       return const Center(
-                        child: Text('No Friends! Try to Make Some.'),
+                        child: CircularProgressIndicator(),
                       );
                     }),
           )

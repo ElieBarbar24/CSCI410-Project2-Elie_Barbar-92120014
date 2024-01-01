@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomAlertDialog extends StatefulWidget {
-  CustomAlertDialog({
+  const CustomAlertDialog({
     Key? key,
     required this.title,
     required this.description,
@@ -28,7 +28,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "${widget.title}",
+              widget.title,
               style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -37,9 +37,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("${widget.description}"),
+            child: Text(widget.description),
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 50,
             child: InkWell(

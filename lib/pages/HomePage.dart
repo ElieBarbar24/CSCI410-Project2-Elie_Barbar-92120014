@@ -25,8 +25,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     recentChatsStream.loadRecentChats(currentUser.id!);
+
     recentChatSignal.RecentChatSignalCheck(currentUser.id!);
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       recentChatSignal.RecentChatSignalCheck(currentUser.id!);
     });
     recentChatSignal.signalStream.listen((int? result) async {
@@ -41,6 +43,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  @override
+void dispose() {
+  timer.cancel(); // Cancel the timer to stop periodic updates
+  recentChatsStream.dispose(); // Close the stream controller
+
+  super.dispose();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                 );
               });
             } else {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ),

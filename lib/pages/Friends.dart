@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:connect/Models/User.dart';
 import 'package:connect/widgets/FriendsModel.dart';
 import 'package:connect/Querys/UserAction.dart';
@@ -37,12 +36,12 @@ class _FriendsState extends State<Friends> {
       appBar: AppBar(
         actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: IconButton(onPressed: (){
               setState(() {
                 friendsStream.searchUsers(currentUser.id!);
               });
-            }, icon: Icon(Icons.refresh))
+            }, icon: const Icon(Icons.refresh))
           ),
         ],
       ),

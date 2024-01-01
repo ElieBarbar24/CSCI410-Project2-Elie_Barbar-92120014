@@ -28,19 +28,21 @@ class _ChatPageState extends State<ChatPage> {
 
     MakeUnreadedMessagesReaded(currentUser.id!, widget.user.relationID!);
 
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       _signalService.roomSignalCheck(widget.user.relationID!);
     });
 
     _signalService.signalStream.listen((int? result) async {
       if (result == 1) {
-        MakeUnreadedMessagesReaded(currentUser.id!, widget.user.relationID!);
+        await MakeUnreadedMessagesReaded(currentUser.id!, widget.user.relationID!);
 
         _messageStream.loadMessages(widget.user.relationID!);
 
         roomSignalChangeTo0(widget.user.relationID!);
       } else {}
-    }, onError: (error) {});
+    }, onError: (error) {
+
+    });
 
     super.initState();
   }
@@ -75,7 +77,7 @@ class _ChatPageState extends State<ChatPage> {
               padding: const EdgeInsets.only(left: 10),
               child: Text(
                 widget.user.name,
-                style: TextStyle(color: Color(0xFF113953)),
+                style: const TextStyle(color: Color(0xFF113953)),
               ),
             )
           ],
@@ -94,7 +96,7 @@ class _ChatPageState extends State<ChatPage> {
 
                     messages.sort((a, b) => a.date.compareTo(b.date));
 
-                    WidgetsBinding.instance!.addPostFrameCallback((_) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
                       _scroller.jumpTo(_scroller.position.maxScrollExtent);
                     });
 
@@ -106,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
                       },
                     );
                   } else {
-                    return Center();
+                    return const Center();
                   }
                 },
               ),
@@ -115,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
           ListTile(
             title: TextFormField(
               controller: _chatTextController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Enter Message",
                 border: InputBorder.none,
               ),
@@ -145,7 +147,7 @@ class _ChatPageState extends State<ChatPage> {
                   _chatTextController.clear();
                 });
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.send,
                 color: Color(0xFF113953),
                 size: 30,

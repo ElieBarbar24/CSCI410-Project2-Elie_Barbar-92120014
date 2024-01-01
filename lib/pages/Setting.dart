@@ -6,7 +6,7 @@ import 'package:connect/Querys/UserAction.dart';
 import 'package:connect/widgets/customAlertDialog.dart';
 import 'package:connect/widgets/Navigator.dart';
 class Setting extends StatefulWidget {
-  Setting({Key? key}) : super(key: key);
+  const Setting({Key? key}) : super(key: key);
 
   @override
   State<Setting> createState() => _SettingState();
@@ -22,8 +22,8 @@ class _SettingState extends State<Setting> {
   String name = '';
 
   Future<void> _selectImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       await updateProfile(currentUser.id!, File(image.path));
@@ -100,7 +100,7 @@ class _SettingState extends State<Setting> {
       return;
     }
 
-    var response;
+    int? response;
     switch (field) {
       case 'name':
         setState(() {

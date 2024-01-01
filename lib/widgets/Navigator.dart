@@ -4,7 +4,7 @@ import 'package:connect/Models/User.dart';
 
 class NavigatorDrawer extends StatelessWidget {
   final String name, email;
-  NavigatorDrawer({
+  const NavigatorDrawer({
     super.key,
     required this.email,
     required this.name,
