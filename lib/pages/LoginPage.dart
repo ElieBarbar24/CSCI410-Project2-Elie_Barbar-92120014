@@ -179,6 +179,12 @@ class _LoginPageState extends State<LoginPage> {
                                 error = 'Email Not Found.';
                               });
                             }
+                            else{
+                              setState(() {
+                                checking = false;
+                                error = 'Error accured ';
+                              });
+                            }
                           }
                         },
                         style: ElevatedButton.styleFrom(
